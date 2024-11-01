@@ -1,0 +1,200 @@
+@import "responsive";
+.tabsbar{
+    font-family: Montserrat-Variable, sans-serif;
+    margin: 80px 0px 30px 0px;
+    @include Res(m-4){
+        margin: 40px 0px 0px 0px;
+    }
+    ul{
+        display: flex;
+        list-style: none;
+        li{
+            padding: 0px 40px;
+            border-right: 3px solid #D71920;
+            font-size: 20px;
+            color: #383232;
+            font-weight: 300;
+            &:first-child{
+                padding-left: 0;
+            }
+            &:last-child{
+                padding-right: 0;
+                border: none;
+            }
+            &.action{
+                text-decoration: underline;
+            }
+            @include Res (m-4){
+                padding: 0px 20px;
+                font-size: 16px;
+            }
+        }
+    }
+}
+.news {
+    display: grid;
+    grid-template-columns: 1fr 46%;
+    gap: 75px;
+    margin: 60px 0px;
+    font-family: Montserrat-Variable, sans-serif;
+    @include Res(m-4){
+        margin: 40px 0px;
+    }
+    .news-img{
+        img{
+            width: 100%;
+        }
+    }
+    @include Res (m-9){
+        gap: 50px;
+    }
+    @include Res (m-7){
+        display: block;
+    }
+    .news-text{
+        position: relative;
+        &::before{
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 98px;
+            background-color: #383232;
+            @include Res(m-12){
+                height: 88px;
+            }
+            @include Res(m-11){
+                height: 66px;
+            }
+            @include Res(m-9){
+                height: 40px;
+            }
+            @include Res(m-7){
+                display: none;
+            }
+        }
+        &::after{
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 68px;
+            background-color: #383232;
+            bottom: 0;
+            @include Res(m-12){
+                height: 50px;
+            }
+            @include Res(m-11){
+                height: 40px;
+            }
+            @include Res(m-9){
+                height: 20px;
+            }
+            @include Res(m-7){
+                display: none;
+            }
+        }
+        .news-text-wraper {
+            position: absolute;
+            top: 32%;
+            width: 77%;
+            @include Res(m-14){
+                top: 30%;
+                width: 72%;
+            }
+            @include Res(m-12){
+                top: 30%;
+                width: 77%;
+            }
+            @include Res(m-11){
+                top: 22%;
+                width: 93%;
+            }
+            @include Res(m-9){
+                width: 100%;
+            }
+            @include Res(m-7){
+                position: unset;
+                margin: 30px 0px;
+            }
+            @include Res(m-4){
+                position: unset;
+                margin: 20px 0px;
+            }
+            h4 {
+                font-size: 30px;
+                font-weight: 300;
+                margin:20px 0px;
+                @include Res (m-14){
+                    font-size: 28px;
+                }
+                @include Res (m-14){
+                    font-size: 26px;
+                }
+                @include Res (m-11){
+                    font-size: 24px;
+                }
+                @include Res (m-9){
+                    font-size: 22px;
+                    margin: 10px 0px;
+                }
+                @include Res (m-7){
+                    font-size: 20px;
+                }
+                @include Res (m-4){
+                    font-size: 18px;
+                }
+            }
+            span{
+                padding: 0px 15px;
+                font-size: 14px;
+            }
+        }
+    }
+}
+.number{
+    margin-bottom: 100px;
+    @include Res(m-7){
+        margin-bottom: 60px;
+    }
+    @include Res(m-4){
+        margin-bottom: 50px;
+    }
+    ul{
+        list-style: none;
+        display: flex;
+        padding: 0;
+        li {
+            padding: 12px 20px;
+            background-color: #F0F1F2;
+            margin: 0px 4px;
+            font-size: 16px;
+            @include Res(m-4){
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            &:first-child{
+                background-color: #fff;
+                a{
+                    color: #383232;
+                }
+            }
+            &:last-child{
+                background-color: #fff;
+                a{
+                    color: #383232;
+                }
+            }
+            &.action{
+                background-color: #D71920;
+                a{
+                    color: #fff;
+                }
+            }
+            a{
+                color: #D71920;
+                text-decoration: none;
+                font-family: Arial;
+                font-weight: 400;
+            }
+        }
+    }
+}
