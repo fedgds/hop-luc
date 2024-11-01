@@ -318,16 +318,16 @@ function cutString($string = '', $size = 100, $link = '...')
 }
 // Duplicate language
 add_action('init', function () {
-    pll_register_string('mytheme-language', 'Tm hiểu thêm');
-    pll_register_string('mytheme-language', 'Download Profile');
+    pll_register_string('mytheme-language', 'Tìm hiểu thêm');
+    pll_register_string('mytheme-language', 'Tải tài liệu');
     pll_register_string('mytheme-language', 'i tác quc t');
     pll_register_string('mytheme-language', 'ối tác trong nước');
     pll_register_string('mytheme-language', 'Tt cả');
-    pll_register_string('mytheme-language', 'Thi gian');
+    pll_register_string('mytheme-language', 'Thời gian');
     pll_register_string('mytheme-language', 'Tin đ');
     pll_register_string('mytheme-language', 'Từ kho tuyn dụng');
     pll_register_string('mytheme-language', 'Đã hoàn thành');
-    pll_register_string('mytheme-language', 'Chưa hoàn thnh');
+    pll_register_string('mytheme-language', 'Chưa hoàn thành');
     pll_register_string('mytheme-language', 'Tìm kiếm');
     pll_register_string('mytheme-language', 'Xem thm');
     pll_register_string('mytheme-language', 'LCH SỬ');
@@ -375,8 +375,8 @@ add_action('init', function () {
     pll_register_string('mytheme-language', 'Tìm kiếm dự án');
     pll_register_string('mytheme-language', 'Nét nổi bật');
     pll_register_string('mytheme-language', 'Tiến độ');
-    pll_register_string('mytheme-language', 'Tinh / Thanh pho');
-    pll_register_string('mytheme-language', 'Quan / Huyen');
+    pll_register_string('mytheme-language', 'Tỉnh / Thành phố');
+    pll_register_string('mytheme-language', 'Quận / Huyện');
     pll_register_string('mytheme-language', 'Quy mo');
     pll_register_string('mytheme-language', 'Tien do');
     pll_register_string('mytheme-language', 'Vi tri');
@@ -1118,12 +1118,32 @@ function wp_corenavi_table($custom_query = null) {
 }
 
 
+function convertToNonAccent($str) {
+    $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
+    $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
+    $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", "i", $str);
+    $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", "o", $str);
+    $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", "u", $str);
+    $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", "y", $str);
+    $str = preg_replace("/(đ)/", "d", $str);
+    $str = preg_replace("/(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)/", "A", $str);
+    $str = preg_replace("/(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)/", "E", $str);
+    $str = preg_replace("/(Ì|Í|Ị|Ỉ|Ĩ)/", "I", $str);
+    $str = preg_replace("/(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)/", "O", $str);
+    $str = preg_replace("/(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)/", "U", $str);
+    $str = preg_replace("/(Ỳ|Ý|Ỵ|Ỷ|Ỹ)/", "Y", $str);
+    $str = preg_replace("/(Đ)/", "D", $str);
+    return $str;
+}
+
 function callProvince()
 {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://provinces.open-api.vn/api/',
+        CURLOPT_URL => (pll_current_language() == 'vi' || pll_current_language() == 'en') 
+        ? 'http://xaydunghopluc.wecan-group.info/wp-content/themes/theme/template-parts/city.json'
+        : 'http://xaydunghopluc.wecan-group.info/wp-content/themes/theme/template-parts/city_cn.json',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -1136,21 +1156,18 @@ function callProvince()
     $response_province = curl_exec($curl);
     $arr_province = json_decode($response_province);
 
-
     $list_province = [];
-
+    $is_english = pll_current_language() == 'en';
 
     foreach ($arr_province as $key => $value) {
         $id_province = $value->code;
         $list_province[$key]['id_province'] = $id_province;
-        $list_province[$key]['name'] = $value->name;
+        $list_province[$key]['name'] = $is_english ? convertToNonAccent($value->name) : $value->name;
         $list_province[$key]['division_type'] = $value->division_type;
         $list_province[$key]['codename'] = $value->codename;
         $list_province[$key]['phone_code'] = $value->phone_code;
-
-
     }
-//    print_r($list_province);die;
+
     return $list_province;
 }
 
@@ -1159,10 +1176,11 @@ add_action('wp_ajax_nopriv_get_ditricts', 'callDitricts');
 function callDitricts()
 {
     $codeProvince = $_POST['keycode'];
-//    $codeProvince = 1;
     $curl_one = curl_init();
     curl_setopt_array($curl_one, array(
-        CURLOPT_URL => 'https://provinces.open-api.vn/api/d',
+        CURLOPT_URL => (pll_current_language() == 'vi' || pll_current_language() == 'en') 
+        ? 'http://xaydunghopluc.wecan-group.info/wp-content/themes/theme/template-parts/district.json'
+        : 'http://xaydunghopluc.wecan-group.info/wp-content/themes/theme/template-parts/district_cn.json',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -1171,28 +1189,29 @@ function callDitricts()
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
     ));
+    
     $response_ditricts = curl_exec($curl_one);
     $arr_ditricts = json_decode($response_ditricts);
     $list_ditricts = [];
+    $is_english = pll_current_language() == 'en';
+    
     foreach ($arr_ditricts as $chi => $item) {
-        $id_ditricts = $item->province_code;
-//            print_r($item->province_code);die;
         if ($codeProvince == $item->province_code) {
             $list_ditricts[$chi]['province_code'] = $item->province_code;
-            $list_ditricts[$chi]['name'] = $item->name;
+            $list_ditricts[$chi]['name'] = $is_english ? convertToNonAccent($item->name) : $item->name;
             $list_ditricts[$chi]['code'] = $item->code;
             $list_ditricts[$chi]['division_type'] = $item->division_type;
             $list_ditricts[$chi]['codename'] = $item->codename;
         }
-
     }
+
     $option = '';
     $html = '';
     foreach ($list_ditricts as $value) {
         $option .= '<option name="ditricts" id="ditricts" data-key="' . $value['name'] . '" value="' . $value['codename'] . '">' . $value['name'] . '</option>';
     }
-    $html .= '<option value="">' . pll__('Qun / Huyn') . '</option>' . $option;
-//    print_r($html);die;
+    $html .= '<option value="">' . pll__('Quận / Huyện') . '</option>' . $option;
+
     $result['html'] = $html;
     echo json_encode($result);
     die;

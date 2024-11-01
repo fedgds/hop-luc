@@ -35,13 +35,7 @@ $img_library = get_field('img_library', get_the_ID());
                                 </h2>
                                 <p><?= $overview['content_company'] ?></p>
                                <a class="btn-custom" href="<?= $overview['file'] ?>" download>
-                                    <?php if(pll_current_language() == 'vi'): ?>
-                                        Tải tài liệu
-                                    <?php elseif(pll_current_language() == 'en'): ?>
-                                        Download profile
-                                    <?php else: ?>
-                                        下载文件
-                                    <?php endif; ?>
+                                <?php pll_e('Tải tài liệu'); ?>
                                </a>
                             </div>
                         </div>
